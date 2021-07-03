@@ -1,20 +1,7 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -25,7 +12,7 @@ namespace DataSerialization
     /// </summary>
     public partial class MainWindow : Window
     {
-        private XmlDocument selectXmlFile;
+        private string filePath;
         public MainWindow()
         {
             InitializeComponent();
@@ -40,47 +27,35 @@ namespace DataSerialization
             if (openFileDialogXml.ShowDialog() == true)
             {
                 txtBlockSelected.Text = openFileDialogXml.FileName;
-            }
-            using (var myStream = openFileDialogXml.OpenFile())
-            {
-                XmlDocument parsedMyStream = new XmlDocument();
-                try
-                {
-
-                    parsedMyStream.Load(myStream);
-
-                    selectXmlFile = parsedMyStream;
-                }
-
-                catch (XmlException ex)
-                {
-                    MessageBox.Show("The XML could not be read. " + ex);
-                }
+                filePath = openFileDialogXml.FileName;
             }
         }
 
         private void btnConvert_Click(object sender, RoutedEventArgs e)
         {
             XmlSerializer ser = new XmlSerializer(typeof(Root));
+
             Root productOccurence;
-            using (XmlReader reader = XmlReader.Create("test.xml"))
+            using (XmlReader reader = XmlReader.Create(filePath))
             {
                 productOccurence = (Root)ser.Deserialize(reader);
             }
-            string json = JsonConvert.SerializeObject(productOccurence, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { });
+            
+            var json = JsonConvert.SerializeObject(productOccurence, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { });
+            json = json.Replace("null", "[]");
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "JSON|*.json";
-            saveFileDialog.ShowDialog();
-            File.WriteAllText(saveFileDialog.FileName, json);
+            if(saveFileDialog.ShowDialog() == true)
+            {
+                File.WriteAllText(saveFileDialog.FileName, json);
+            }           
         }
 
-
-        // Примечание. Для запуска созданного кода может потребоваться NET Framework версии 4.5 или более поздней версии и .NET Core или Standard версии 2.0 или более поздней.
         /// <remarks/>
-        [System.SerializableAttribute()]
-        [System.ComponentModel.DesignerCategoryAttribute("code")]
-        [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-        [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+        [System.Serializable()]
+        [System.ComponentModel.DesignerCategory("code")]
+        [XmlType(AnonymousType = true)]
+        [XmlRoot(Namespace = "", IsNullable = false)]
         public partial class Root
         {
 
@@ -114,8 +89,6 @@ namespace DataSerialization
 
             private string nameField;
 
-            
-
             /// <remarks/>
             [System.Xml.Serialization.XmlAttributeAttribute()]
             public string Id
@@ -146,6 +119,7 @@ namespace DataSerialization
 
             /// <remarks/>
             [System.Xml.Serialization.XmlArrayItemAttribute("Attr", IsNullable = false)]
+            [JsonProperty(PropertyName = "Props")]
             public RootProductOccurenceAttr[] Attributes
             {
                 get
