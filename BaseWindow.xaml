@@ -1,11 +1,11 @@
-﻿<Window x:Class="DataSerialization.MainWindow"
+﻿<Window x:Class="DataSerialization.BaseWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataSerialization"
         mc:Ignorable="d"
-        Title="DataSerialization" Height="250" Width="230" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="DataSerialization" Height="200" Width="230" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <StackPanel Orientation="Vertical" Width="200" VerticalAlignment="Center">
         <Button Content="Select file" Name="btnSelectFile" Click="btnSelectFile_Click"></Button>
         <TextBlock Text="Selected file: " Name="txtBlockSelected" Margin="11,0,0,0" TextWrapping="Wrap"></TextBlock>

@@ -10,10 +10,10 @@ namespace DataSerialization
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class BaseWindow : Window
     {
         private string filePath;
-        public MainWindow()
+        public BaseWindow()
         {
             InitializeComponent();
         }
@@ -43,6 +43,8 @@ namespace DataSerialization
             
             var json = JsonConvert.SerializeObject(productOccurence, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { });
             json = json.Replace("null", "[]");
+            json = json.Replace("{\r\n" + "  \"ModelFile\": ", "");
+            json = json.Replace("\r\n" + "}", "");
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "JSON|*.json";
             if(saveFileDialog.ShowDialog() == true)
