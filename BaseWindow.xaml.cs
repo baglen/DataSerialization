@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace DataSerialization
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для BaseWindow.xaml
     /// </summary>
     public partial class BaseWindow : Window
     {
@@ -52,7 +52,7 @@ namespace DataSerialization
                 File.WriteAllText(saveFileDialog.FileName, json);
             }           
         }
-
+        #region xml objects
         /// <remarks/>
         [System.Serializable()]
         [System.ComponentModel.DesignerCategory("code")]
@@ -190,9 +190,7 @@ namespace DataSerialization
                 }
             }
         }
-
-
-
+        #endregion
     }
 }
 
