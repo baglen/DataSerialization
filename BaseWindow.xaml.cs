@@ -34,13 +34,19 @@ namespace DataSerialization
         private void btnConvert_Click(object sender, RoutedEventArgs e)
         {
             XmlSerializer ser = new XmlSerializer(typeof(Root));
-
-            Root productOccurence;
-            using (XmlReader reader = XmlReader.Create(filePath))
-            {
-                productOccurence = (Root)ser.Deserialize(reader);
+            Root productOccurence = new Root();
+            if(!string.IsNullOrWhiteSpace(filePath))
+            { 
+                using (XmlReader reader = XmlReader.Create(filePath))
+                {
+                    productOccurence = (Root)ser.Deserialize(reader);
+                }
             }
-            
+            else
+            {
+                MessageBox.Show("File not selected!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             var json = JsonConvert.SerializeObject(productOccurence, Newtonsoft.Json.Formatting.Indented, new JsonSerializerSettings { });
             json = json.Replace("null", "[]");
             json = json.Replace("{\r\n" + "  \"ModelFile\": ", "");
